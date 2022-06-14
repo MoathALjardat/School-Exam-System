@@ -126,8 +126,5 @@ public class TableMethods {
 		colBtn.setCellFactory(cellFactory);
 		colBtn.setPrefWidth(110);
 		table.getColumns().add(colBtn);
-
 	}
-
-	
 }

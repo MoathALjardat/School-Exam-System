@@ -548,8 +548,38 @@ public class Queries {
 			int id = Integer.parseInt(resultSet.getString(1));
 			int phoneNumber = Integer.parseInt(resultSet.getString(4));
 			int budget = Integer.parseInt(resultSet.getString(6));
-
+			String answer = resultSet.getString(7) == null ? "" : resultSet.getString(7);
+			String question = resultSet.getString(8) == null ? "" : resultSet.getString(8);
 			student = new Student(id, password, userName, phoneNumber, resultSet.getString(5), budget);
+			student.setAnswer(answer);
+			student.setQuestion(question);
+
+		}
+		resultSet.close();
+		statement.close();
+
+		con.close();
+		return student;
+
+	}
+
+	public static Student getStudentForSignInByAnswerAQuestion(String answer, String question)
+			throws ClassNotFoundException, SQLException {
+		connectDB();
+
+		String sql = "select * from  students s where s.answer='" + answer + "' and s.question='"
+				+ question + "';";
+
+		Statement statement = con.createStatement();
+		ResultSet resultSet = statement.executeQuery(sql);
+		Student student = null;
+
+		while (resultSet.next()) {
+			int id = Integer.parseInt(resultSet.getString(1));
+			int phoneNumber = Integer.parseInt(resultSet.getString(4));
+			int budget = Integer.parseInt(resultSet.getString(6));
+
+			student = new Student(id, answer, question, phoneNumber, resultSet.getString(5), budget);
 
 		}
 		resultSet.close();
@@ -729,4 +759,14 @@ public class Queries {
 
 	}
 
+	public static void savePersonalQuestion(Student student) throws SQLException, ClassNotFoundException {
+
+		connectDB();
+
+		ExecuteStatement("UPDATE students set answer = '" + student.getAnswer() + "' where ID = " + student.getId());
+		ExecuteStatement("UPDATE students set question = '" + student.getQuestion() + "' where ID = " + student.getId());
+
+		con.close();
+
+	}
 }
